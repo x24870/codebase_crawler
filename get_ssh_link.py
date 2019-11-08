@@ -88,8 +88,12 @@ def clone_all_repositiry(record_path):
 
 if __name__ == '__main__':
 	initial()
-	save_all_link( get_record_path() )
-	#clone_all_repositiry( get_record_path() )
+	
+	#If the record file is exist, this step can be skipped
+	#save_all_link( get_record_path() )
+
+	#If you only want to update the record file, this step can be skipped
+	clone_all_repositiry( get_record_path() )
 
 		
 	
