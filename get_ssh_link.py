@@ -79,7 +79,8 @@ def clone_all_repositiry(record_path):
 	with open(record_path, 'r') as f:
 		url_lst = f.readlines()
 	for url in url_lst:
-		url = url[:-1]
+		if url[-1] == '\n':
+			url = url[:-1]
 		url = url.replace('megaracgit', 'RickYe:Pegaaccount0@megaracgit')
 		clone_path = os.path.join( DOWNLOAD_PATH, os.path.basename(url).split('.git')[0] )
 		print("URL: " + url)
