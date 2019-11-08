@@ -18,7 +18,12 @@ cookies = {'__cfduid': 'd0269b8f63706340b350b4f38e06558301542807752',
 def initial():
 	if not os.path.exists(REC_PATH):
 		os.makedirs(REC_PATH)
+
+def get_record_path():
+	date = datetime.datetime.now().strftime("%Y%m%d")
+	return os.path.join(REC_PATH, date+'.txt')
 	
+
 def check_next_page(soup):
 	e_next_btn = soup.find('a', {'rel': 'next'})
 	if e_next_btn['href'] == '#':
@@ -33,7 +38,7 @@ def get_clone_http_url(url):
 	print(e['href'])
 	return e['href']
 
-def get_all_repository_link(url):
+def get_page_repository_link(url):
 	url_lst = []
 	resp = requests.get(url, cookies=cookies)
 	resp.raise_for_status()
@@ -47,23 +52,33 @@ def get_all_repository_link(url):
 
 	return url_lst, next_page
 
-def write_to_file(url_lst):
-	date = datetime.datetime.now().strftime("%Y%m%d")
-	f_path = os.path.join(REC_PATH, date+'.txt')
-	with open(f_path, 'w+') as f:
-		f.write( "\n".join(url for url in url_lst) )
-
-if __name__ == '__main__':
-	initial()
+def save_all_link(f_path):
 	https_link_lst = []
 
 	for page_num in range(5, 10):#TODO: change to 1
 		print('--------------------- Page {} ---------------------'.format(page_num))
 		url = '{}/?{}&{}{}&{}'.format(AMI_GIT_URL, non_arch, page, page_num, sort)
 		print('URL: ' + url)
-		link_lst ,next_page = get_all_repository_link(url)
-		https_link_lst.extend(link_lst)
+		one_page_link_lst ,next_page = get_page_repository_link(url)
+		https_link_lst.extend(one_page_link_lst)
 		if not next_page:
 			break
+
+	with open(f_path, 'w+') as f:
+		f.write( "\n".join(link for link in https_link_lst) )
+	print('*** Saved all clone https links successully!: '.format(f_path))
+	
+
+def clone_all_repositiry(f_path):
+	url_lst = []
+	with open(f_path, 'r') as f:
+		url_lst = f.readlines()
+	print(url_lst)
+
+if __name__ == '__main__':
+	initial()
+	save_all_link( get_record_path() )
+	clone_all_repositiry( get_record_path() )
+
 		
-	write_to_file(https_link_lst)
+	
