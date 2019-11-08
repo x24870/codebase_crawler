@@ -1,7 +1,6 @@
 import os, requests, datetime, subprocess
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
-import git
 
 ### URL pattern
 # https://megaracgit.ami.com/?non_archived=true&page=2&sort=created_desc
@@ -80,6 +79,7 @@ def clone_all_repositiry(record_path):
 	with open(record_path, 'r') as f:
 		url_lst = f.readlines()
 	for url in url_lst:
+		url = url[:-1]
 		url = url.replace('megaracgit', 'RickYe:Pegaaccount0@megaracgit')
 		clone_path = os.path.join( DOWNLOAD_PATH, os.path.basename(url).split('.git')[0] )
 		print("URL: " + url)
