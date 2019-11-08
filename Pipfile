@@ -9,6 +9,7 @@ verify_ssl = true
 bs4 = "*"
 requests = "*"
 html5lib = "*"
+gitpython = "*"
 
 [requires]
 python_version = "3.5"
